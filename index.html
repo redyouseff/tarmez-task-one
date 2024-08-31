@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #user {
+           
+            background-color: white;
+            padding: 10px;
+            border-radius: 70px;
+            box-shadow: 1px 3px 3px black;
+            cursor: pointer;
+        }
+        #user.selected{
+            border: solid orange 6px;
+        }
+      
+        body{
+            background:linear-gradient(45deg,rgb(3, 3, 130),rgb(128, 2, 2));
+        }
+    </style>
+</head>
+<body>
+
+    <div id="content " style="display: flex; ">
+        <div id="users" style="width: 30%; ">
+            <div style="width: 90%;margin: auto; height: 80px;margin-top: 20px;" id="user" class="selected" >
+                <h4 style="margin-left: 20px;">jjj</h4>
+                <h4 style="margin-left: 20px;">jjjjhhhhhhhhhhhhhh</h4>
+            </div>
+            <div style="width: 90%;margin: auto; height: 80px; margin-top: 20px;" id="user" >
+                <h4 style="margin-left: 20px;">jjj</h4>
+                <h4 style="margin-left: 20px;">jjjjhhhhhhhhhhhhhh</h4>
+            </div>
+        </div>
+
+        <div id="posts-container" style="width: 70%;background-color: rgb(236,236,236) ;border-radius: 10px;">
+            <div id="posts" style="width: 90%; margin: auto;">
+                <div id="post" style="background-color: white;">
+                  <h3 style="margin-top: 10px;">hellow woe</h3>
+                  <hr>
+                  <h4 style="margin-bottom: -5px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima recusandae inventore quas culpa facere praesentium illo excepturi debitis, magni id perferendis dicta iure consequatur, dignissimos doloribus molestias ipsam esse laborum.</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+   const getPosts=(userId)=>{
+    fetch("https://jsonplaceholder.typicode.com/posts?userId="+userId)
+    .then(response=>{
+        if(response.ok){
+            return response.json()
+        }
+    })
+    .then(posts=>{
+      
+            document.getElementById("posts").innerHTML="";
+            for(post of posts){
+                let content=`  <div id="post" style="background-color: white;">
+                  <h3 >${post.title}</h3>
+                  <hr>
+                  <h4 > ${post.body}</h4>
+               </div>`
+               document.getElementById("posts").innerHTML +=content
+
+            }
+    })
+
+    // let request=new XMLHttpRequest()
+    // request.open("GET","https://jsonplaceholder.typicode.com/posts?userId="+userId);
+    // request.responseType="json"
+    // request.send()
+    // request.onload=()=>{
+    //     if(request.status>=200&&request.status<=300){
+    //         let posts=request.response
+    //         document.getElementById("posts").innerHTML="";
+    //         for(post of posts){
+    //             let content=`  <div id="post" style="background-color: white;">
+    //               <h3 >${post.title}</h3>
+    //               <hr>
+    //               <h4 > ${post.body}</h4>
+    //            </div>`
+    //            document.getElementById("posts").innerHTML +=content
+
+    //         }
+           
+    //     }
+        // else(
+        //     alert("wrong on get data ")
+        // )
+    // }
+   }
+
+
+   const getusers=()=>{
+    return new Promise((resolve,reject)=>{
+        fetch("https://jsonplaceholder.typicode.com/users")
+    .then(response=>{
+        if(response.ok){
+            return response.json();
+        }
+        else{
+           reject("error ");
+        }
+
+    })
+    .then(users=>{
+                 document.getElementById("users").innerHTML="";
+            for(user of users){
+                let content=`  <div style="width: 90%;margin: auto; height: 80px;margin-top: 20px;" id="user" " onclick="userclicked(${user.id},this)" >
+                <h3 style="margin-left: 20px;margin-top: 20px;">${user.name}</h3>
+                <h4 style="margin-left: 20px;margin-bottom: 500px;">${user.email}</h4>
+            </div>`
+               document.getElementById("users").innerHTML +=content
+           
+            }
+            resolve();
+    })
+
+    })
+
+   
+
+    // let request=new XMLHttpRequest()
+    // request.open("GET","https://jsonplaceholder.typicode.com/users");
+    // request.responseType="json"
+    // request.send()
+    // request.onload=()=>{
+    //     if(request.status>=200&&request.status<=300){
+    //         console.log(request.response)
+    //         let users=request.response
+    //         document.getElementById("users").innerHTML="";
+    //         for(user of users){
+    //             let content=`  <div style="width: 90%;margin: auto; height: 80px;margin-top: 20px;" id="user" " onclick="userclicked(${user.id},this)" >
+    //             <h3 style="margin-left: 20px;margin-top: 20px;">${user.name}</h3>
+    //             <h4 style="margin-left: 20px;margin-bottom: 500px;">${user.email}</h4>
+    //         </div>`
+    //            document.getElementById("users").innerHTML +=content
+
+    //         }
+           
+    //     }
+    //     else(
+    //         alert("wrong on get data ")
+    //     )
+    // }
+   }
+  
+   getusers()
+   
+   .then(()=>{
+    getPosts(1);
+   })
+   .catch((err)=>{
+    console.log(err)
+   })
+
+
+
+   const userclicked=(userId,el)=>{
+    let seleted=document.getElementsByClassName("selected")
+    for (element of seleted){
+        element.classList.remove("selected")
+    }
+    el.classList.add("selected")
+  
+    getPosts(userId)
+   }
+
+
+</script>
+    <script src="./index.js"></script>
+</body>
+</html>
